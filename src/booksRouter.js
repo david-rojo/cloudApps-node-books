@@ -154,7 +154,12 @@ router.post('/nodebooks/api/v2/books', async (req, res) => {
 });
 
 router.get('/nodebooks/api/v2/books', async (req, res) => {
-    const allBooks = await Book.find().exec();
+    const allBooks = await Book.find().select([
+            "-summary",
+            "-author",
+            "-publisher",
+            "-publicationYear"])
+        .exec();
     res.json(toResponse(allBooks));
 });
 
