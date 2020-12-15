@@ -221,34 +221,6 @@ router.delete('/nodebooks/api/v2/books/:bookId/comments/:commentId', async (req,
 
 });
 
-router.put('/books/:id', async (req, res) => {
-    const id = req.params.id;
-
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.sendStatus(400);
-    }
-
-    const book = await Book.findById(id);
-    if (!book) {
-        res.sendStatus(404);
-    } else {
-        if (!validBook(req.body)) {
-            res.sendStatus(400);
-        } else {
-
-            book.title = req.body.title;
-            book.summary = req.body.summary;
-            book.author = req.body.author;
-            book.publisher = req.body.publisher;
-            book.publicationYear = req.body.publicationYear;
-
-            await book.save();
-
-            res.json(toResponse(book));
-        }
-    }
-});
-
 router.post('/nodebooks/api/v2/books/:id/comments', async (req, res) => {
     const id = req.params.id;
 
