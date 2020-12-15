@@ -176,24 +176,49 @@ router.get('/nodebooks/api/v2/books/:id', async (req, res) => {
         console.log("book not found");
         res.sendStatus(404);
     } else {
-        res.json(toResponse(book));
+
+        const comments =  await Comment.find( {book: id} ).select([
+            "-book",
+            ])
+            .exec();
+        
+        res.json({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            publicationYear: book.publicationYear,
+            comments: toResponse(comments)
+        })
     }
 });
 
-router.delete('/books/:id', async (req, res) => {
-    const id = req.params.id;
+router.delete('/nodebooks/api/v2/books/:bookId/comments/:commentId', async (req, res) => {
+    const bookId = req.params.bookId;
+    const commentId = req.params.commentId;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
+    if(!mongoose.Types.ObjectId.isValid(bookId) || !mongoose.Types.ObjectId.isValid(commentId)){
+        console.log("invalid id");
         return res.sendStatus(400);
     }
 
-    const book = await Book.findById(id);
-    if (!book) {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+        console.log("comment not found");
         res.sendStatus(404);
-    } else {
-        await Book.findByIdAndDelete(id);
-        res.json(toResponse(book));
     }
+    else {
+        if (comment.book == bookId) {
+            await Comment.findByIdAndDelete(commentId);
+            res.json(toResponse(comment));
+        }
+        else {
+            console.log("comment is not assigned to this book");
+            res.sendStatus(404);
+        }
+    }
+
 });
 
 router.put('/books/:id', async (req, res) => {
@@ -254,7 +279,12 @@ router.post('/nodebooks/api/v2/books/:id/comments', async (req, res) => {
             book,
         }).save();
 
-        return res.json(toResponse(comment, user));
+        return res.json({
+            id: comment._id,
+            text: comment.text,
+            score: comment.score,
+            nick: user.nick
+        })
     }
     
 });
@@ -326,11 +356,31 @@ router.delete('/nodebooks/api/v2/users/:id', async (req, res) => {
     const user = await User.findById(id);
     if (!user) {
         console.log("user not found");
-        res.sendStatus(404);
+        return res.sendStatus(404);
     } else {
         await User.findByIdAndDelete(id);
-        res.json(toResponse(user));
+        res.json(toResponse(user)); 
     }
+});
+
+router.get('/nodebooks/api/v2/users/:id/comments', async (req, res) => {
+    const id = req.params.id;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        console.log("invalid id");
+        return res.sendStatus(400);
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+        console.log("user not found");
+        res.sendStatus(404);
+    } else {
+        const allCommentsFromUser = await Comment.find( {user: id} )
+            .select(["-user"])
+            .exec();
+        res.json(toResponse(allCommentsFromUser));
+    }   
 });
 
 module.exports = { router, init }
