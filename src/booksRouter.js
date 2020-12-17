@@ -306,7 +306,7 @@ router.patch('/nodebooks/api/v2/users/:id', async (req, res) => {
     }
 
     const user = await User.findOneAndUpdate(
-        {id: req.params.id},
+        {_id: req.params.id},
         {email: req.body.email},
         {new: true}
     ).exec();
