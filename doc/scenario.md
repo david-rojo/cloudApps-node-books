@@ -19,7 +19,7 @@ From a technical point of view, it will be taken in account the following aspect
 * Information is stored in mongoDB.
 * Application will be implemented with Node.js and Express.
 * Application will be divided at least in two modules:
-  * one module "server.js" that starts express server.
-  * one module "bookRouter.js" that acts as REST controller.
+  * one module ```server.js``` that starts express server.
+  * one module ```bookRouter.js``` that acts as REST controller.
 * For access to database, moongose will be used.
 * A postman collection must be included in order to test the application.
