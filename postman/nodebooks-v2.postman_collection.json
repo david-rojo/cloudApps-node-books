@@ -55,7 +55,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/books/5fd943be0664263f48e7f9ee",
+					"raw": "http://localhost:8080/nodebooks/api/v2/books/5fdba848cc403a3777bdf2b0",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -66,7 +66,7 @@
 						"api",
 						"v2",
 						"books",
-						"5fd943be0664263f48e7f9ee"
+						"5fdba848cc403a3777bdf2b0"
 					]
 				}
 			},
@@ -136,7 +136,7 @@
 					"raw": "{\n  \"text\": \"very good, I enjoyed it a lot reading it\",\n  \"nick\": \"david\",\n  \"score\": 4\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/books/5fd94488b34cd440dab12da5/comments",
+					"raw": "http://localhost:8080/nodebooks/api/v2/books/5fdbac060a0b103c162ce853/comments",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -147,7 +147,7 @@
 						"api",
 						"v2",
 						"books",
-						"5fd94488b34cd440dab12da5",
+						"5fdbac060a0b103c162ce853",
 						"comments"
 					]
 				}
@@ -249,7 +249,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fd7e8a9e64766819a6d5994",
+					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fdbae12a499d13d4b067fe2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -260,7 +260,7 @@
 						"api",
 						"v2",
 						"users",
-						"5fd7e8a9e64766819a6d5994"
+						"5fdbae12a499d13d4b067fe2"
 					]
 				}
 			},
@@ -283,7 +283,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fd9189eb596da5c7e5faac2/comments",
+					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fdbae12a499d13d4b067fe2/comments",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -294,7 +294,7 @@
 						"api",
 						"v2",
 						"users",
-						"5fd9189eb596da5c7e5faac2",
+						"5fdbae12a499d13d4b067fe2",
 						"comments"
 					]
 				}
@@ -327,7 +327,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fd7e8a9e64766819a6d5994",
+					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fdb9ca91aff762907c35597",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -338,7 +338,7 @@
 						"api",
 						"v2",
 						"users",
-						"5fd7e8a9e64766819a6d5994"
+						"5fdb9ca91aff762907c35597"
 					]
 				}
 			},
@@ -361,7 +361,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fd94488b34cd440dab12da7",
+					"raw": "http://localhost:8080/nodebooks/api/v2/users/5fdbae3ca499d13d4b067fe3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -372,7 +372,7 @@
 						"api",
 						"v2",
 						"users",
-						"5fd94488b34cd440dab12da7"
+						"5fdbae3ca499d13d4b067fe3"
 					]
 				}
 			},
