@@ -27,6 +27,7 @@ If you have been using the application previously, please drop the ```books``` c
 In order to launch the application, from ```src``` folder execute:
 
 ```
+$ cd src
 $ node server.js
 ```
 
