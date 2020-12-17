@@ -15,7 +15,7 @@ npm install
 
 ## Deployment
 
-Before deploy the application, is needed to has a available MongoDB database, the most easy way is with docker executing the following command:
+Before deploy the application, is needed to has a available mongoDB database, the most easy way is with [docker](https://www.docker.com/) executing the following command:
 
 ```
 docker run --rm -p 27017:27017 -d --name mongodb-nodebooks mongo:4.4.2-bionic
@@ -30,6 +30,6 @@ In order to launch the application, from ```src``` folder execute:
 node server.js
 ```
 
-## Postman collection
+## Testing
 
-You can find in ```postman``` folder a file that you can import in [Postman](https://www.postman.com/), to test that the application covers the proposed scenario
+You can find in ```postman``` folder a file named [nodebooks-v2.postman_collection.json](/postman/nodebooks-v2.postman_collection.json) that you can import in [Postman](https://www.postman.com/), to test that the application covers the proposed scenario
