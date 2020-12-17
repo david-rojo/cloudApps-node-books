@@ -43,16 +43,13 @@ async function dbConnect() {
     var commentSchema = new mongoose.Schema({
         text: String,
         score: Number,
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
         book: {
             type: Schema.Types.ObjectId,
             ref: 'Book',
             required: true
-        }
+        },
+        nick: String,
+        email: String
     });
 
     Comment = mongoose.model('Comment', commentSchema);
@@ -245,7 +242,8 @@ router.post('/nodebooks/api/v2/books/:id/comments', async (req, res) => {
             return res.sendStatus(404);
         }
         const comment = await new Comment({
-            user,
+            nick: user.nick,
+            email: user.email,
             text: req.body.text,
             score: req.body.score,
             book,
@@ -255,7 +253,7 @@ router.post('/nodebooks/api/v2/books/:id/comments', async (req, res) => {
             id: comment._id,
             text: comment.text,
             score: comment.score,
-            nick: user.nick
+            nick: user.nick,
         })
     }
     
@@ -330,8 +328,16 @@ router.delete('/nodebooks/api/v2/users/:id', async (req, res) => {
         console.log("user not found");
         return res.sendStatus(404);
     } else {
-        await User.findByIdAndDelete(id);
-        res.json(toResponse(user)); 
+        const allCommentsFromUser = await Comment.find( {nick: user.nick} ).exec();
+        if (allCommentsFromUser.length > 0) {
+            console.log("user has comments, is not possible to delete it");
+            return res.sendStatus(404);
+        }
+        else {
+            await User.findByIdAndDelete(id);
+            res.json(toResponse(user));
+        }
+        
     }
 });
 
@@ -348,8 +354,10 @@ router.get('/nodebooks/api/v2/users/:id/comments', async (req, res) => {
         console.log("user not found");
         res.sendStatus(404);
     } else {
-        const allCommentsFromUser = await Comment.find( {user: id} )
-            .select(["-user"])
+        const allCommentsFromUser = await Comment.find( {nick: user.nick} )
+            .select([
+                "-nick",
+                "-email"])
             .exec();
         res.json(toResponse(allCommentsFromUser));
     }   
