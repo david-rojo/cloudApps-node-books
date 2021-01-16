@@ -1,36 +1,22 @@
-# Nodebooks
+# Práctica 2: Node y MongoDB
 
-This is a [Node](https://nodejs.org/en/) project that exposes a REST API, developed with [Express](https://expressjs.com/) and [Mongoose](https://mongoosejs.com/). All the information is stored in a [mongoDB](https://www.mongodb.com/) database.
+## Ejecución
 
-It implements the following [scenario](doc/scenario.md). It has been developed using [Visual Studio Code](https://code.visualstudio.com/) as IDE.
-
-## Installation
-
-In order to download needed dependencies is needed to execute the following command from root folder:
-
-```
+```sh
+$ docker run --name mongo-db  -p 27017:27017 -d mongo:latest
 $ npm install
+$ npm start
+```
+## API URL
+
+```sh
+http://localhost:3000/api/v1/<resource>
 ```
 
+## Uso de la API
 
-## Deployment
+Se proporciona una colección Postman para interactuar con la API.
 
-Before deploy the application, is needed to has a available mongoDB database, the most easy way is with [docker](https://www.docker.com/) executing the following command:
+La baseURL tiene que configurarse para localhost:3000
 
-```
-$ docker run --rm -p 27017:27017 -d --name mongodb-nodebooks mongo:4.4.2-bionic
-```
-On nodebooks server startup two books and one user is created in mongoDb collection called ```books```, in order to check database content is recommended to user some mongo client like [Compass](https://www.mongodb.com/products/compass)
-
-If you have been using the application previously, please drop the ```books``` collection or you cannot be able to launch it.
-
-In order to launch the application, from ```src``` folder execute:
-
-```
-$ cd src
-$ node server.js
-```
-
-## Testing
-
-You can find in ```postman``` folder a file named [nodebooks-v2.postman_collection.json](/postman/nodebooks-v2.postman_collection.json) that you can import in [Postman](https://www.postman.com/), to test that the application covers the proposed scenario
+La base de datos se inicializa con datos de ejemplo
