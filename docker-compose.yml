@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nodebooks-mongodb:
+    image: mongo:4.4.2-bionic
+    expose: 
+      - 27017
+    ports:
+      - "27017:27017"
+    hostname: nodebooks-mongodb
+    container_name: nodebooks-mongodb
+    stdin_open: true
+    tty: true
+    networks:
+      - nodebooks
+
+networks:
+  nodebooks:
+    driver: bridge 
