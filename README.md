@@ -1,22 +1,44 @@
-# Práctica 2: Node y MongoDB
+# Nodebooks
 
-## Ejecución
+This is a [Node](https://nodejs.org/en/) project that exposes a REST API, developed with [Express](https://expressjs.com/) and [Mongoose](https://mongoosejs.com/) implementing Authentication and Auhorization using [JWT](https://www.jwt.io/). All the information is stored in a [mongoDB](https://www.mongodb.com/) database.
 
-```sh
-$ docker run --name mongo-db  -p 27017:27017 -d mongo:latest
+It implements the following [scenario](doc/scenario.md). It has been developed using [Visual Studio Code](https://code.visualstudio.com/) as IDE.
+
+## Deploying infrastructure
+
+Is needed to run the application the deployment of mongoDB instance:
+
+```
+$ docker-compose up
+```
+
+If you wish to launch the containers in background, include ```-d```
+
+The running database has these connection details:
+
+  * port: ```27017```
+
+## Installation
+
+In order to download needed dependencies is needed to execute the following command from root folder:
+
+```
 $ npm install
-$ npm start
-```
-## API URL
-
-```sh
-http://localhost:3000/api/v1/<resource>
 ```
 
-## Uso de la API
+## Deploying the application
 
-Se proporciona una colección Postman para interactuar con la API.
+```
+$ node src/server.js
+```
 
-La baseURL tiene que configurarse para localhost:3000
+When the application is deployed some data is loaded, in order to check database content is recommended to user some mongo client like [Compass](https://www.mongodb.com/products/compass)
 
-La base de datos se inicializa con datos de ejemplo
+## Testing
+
+A [Postman](https://www.postman.com/) collection is provided in the current repository [Practice4-security-node.postman_collection.json](Practice4-security-node.postman_collection.json) to easily play and test the application.
+
+
+## Author
+
+[David Rojo(@david-rojo)](https://github.com/david-rojo)
