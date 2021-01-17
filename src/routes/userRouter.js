@@ -19,6 +19,26 @@ const USER_NOT_FOUND_RESPONSE = {
     "error": "User not found"
 };
 
+const verify = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization').replace('Bearer ', '')
+        const decoded = jwt.verify(token, authConfig.SECRET)
+        const user = await User.findOne({
+            _id: decoded._id
+        })
+        if (!user) {
+            throw new Error()
+        }
+        req.token = token
+        req.user = user
+        next()
+    } catch (e) {
+        res.status(401).send({
+            error: 'Please authenticate.'
+        })
+    }
+}
+
 router.get('/', async (req, res) => {
     const allUsers = await User.find().exec();
     res.json(toResponse(allUsers));
@@ -179,8 +199,10 @@ router.post('/login', async (req, res) => {
 
     var token = jwt.sign({
         id: user._id
-    }, authConfig.secret, {
-        expiresIn: 86400 // expires in 24 hours
+    }, authConfig.SECRET, {
+        //expiresIn: 86400 // expires in 24 hours
+        //expiresIn: 864000 // expires in 10 days (expressed in seconds)
+        expiresIn: authConfig.EXPIRES_IN
     });
 
     res.status(200).send({
@@ -190,24 +212,52 @@ router.post('/login', async (req, res) => {
 
 });
 
-router.get('/me', verifyToken, async (req, res, next) => {
+router.get('/auth/me', async (req, res) => {
+    const token = req.header('Authorization').replace('Bearer ', '')
+    if (!token) 
+        return res.status(401).send({
+            auth: false,
+            message: 'No token provided.'
+        });
 
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, authConfig.secret)
-        const user = await User.findOne({
-            _id: decoded._id
-        })
-        if (!user) {
-            throw new Error()
-        }
-        req.token = token
-        req.user = user
-        next()
-    } catch (e) {
-        res.status(401).send({error: 'Please authenticate.'})
-    }
-
+    jwt.verify(token, authConfig.SECRET, function (err, decoded) {
+        if (err) return res.status(500).send({
+            auth: false,
+            message: 'Failed to authenticate token.'
+        });
+        User.findById(decoded.id, {
+                password: 0
+            }, // projection
+            function (err, user) {
+                if (err) return res.status(500).send("There was a problem finding the user.");
+                if (!user) return res.status(404).send("No user found.");
+                res.status(200).send(user);
+            });
+    });
 });
+
+// router.get('/me', verifyToken, async (req, res, next) => {
+//     console.log('request me received');
+//     try {
+//         const token = req.header('Authorization').replace('Bearer ', '')
+//         console.log('token: ' + token);
+//         const decoded = jwt.verify(token, authConfig.SECRET)
+//         console.log('decoded _id: ' + decoded._id)
+//         console.log('decoded: ' + decoded);
+//         const user = await User.findOne({
+//             _id: decoded._id
+//         })
+//         if (!user) {
+//             throw new Error()
+//         }
+//         req.token = token
+//         req.user = user
+//         next()
+//     } catch (e) {
+//         res.status(401).send({
+//             error: 'Please authenticate.'
+//         })
+//     }
+// });
 
 module.exports = router;
