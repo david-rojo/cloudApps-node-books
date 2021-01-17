@@ -23,9 +23,9 @@ const verify = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, authConfig.SECRET)
-        const user = await User.findOne({
-            _id: decoded._id
-        })
+        const user = await User.findById(decoded.id, {
+            password: 0
+        });
         if (!user) {
             throw new Error()
         }
@@ -39,19 +39,20 @@ const verify = async (req, res, next) => {
     }
 }
 
-router.get('/', async (req, res) => {
+router.get('/', verify, async (req, res) => {
     const allUsers = await User.find().exec();
     res.json(toResponse(allUsers));
 });
 
-router.get('/:id', async (req, res) => {
-    const id = req.params.id;
+router.get('/:id', verify, async (req, res) => {
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).send(INVALID_USER_ID_RESPONSE);
     }
 
-    const user = await User.findById(id);
+    const user = await User.findById(req.params.id, {
+        password: 0
+    });
     if (!user) {
         return res.status(404).send(USER_NOT_FOUND_RESPONSE);
     }
@@ -90,7 +91,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -114,7 +115,7 @@ router.patch('/:id', async (req, res) => {
 
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -144,7 +145,7 @@ router.delete('/:id', async (req, res) => {
     res.json(toResponse(user));
 });
 
-router.get('/:id/comments', async (req, res) => {
+router.get('/:id/comments', verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -183,7 +184,7 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({
         username: req.body.username
-    });
+    }).select('+password').exec();
 
     if (!user) {
         return res.status(404).send('No user found.');
@@ -200,8 +201,6 @@ router.post('/login', async (req, res) => {
     var token = jwt.sign({
         id: user._id
     }, authConfig.SECRET, {
-        //expiresIn: 86400 // expires in 24 hours
-        //expiresIn: 864000 // expires in 10 days (expressed in seconds)
         expiresIn: authConfig.EXPIRES_IN
     });
 
@@ -213,51 +212,34 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/auth/me', async (req, res) => {
-    const token = req.header('Authorization').replace('Bearer ', '')
-    if (!token) 
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
         return res.status(401).send({
             auth: false,
             message: 'No token provided.'
         });
+    }
+
+    const token = authHeader.replace('Bearer ', '')
+    if (!token) {
+        return res.status(401).send({
+            auth: false,
+            message: 'No token provided.'
+        });
+    }
 
     jwt.verify(token, authConfig.SECRET, function (err, decoded) {
         if (err) return res.status(500).send({
             auth: false,
             message: 'Failed to authenticate token.'
         });
-        User.findById(decoded.id, {
-                password: 0
-            }, // projection
+        User.findById(decoded.id, 
             function (err, user) {
                 if (err) return res.status(500).send("There was a problem finding the user.");
                 if (!user) return res.status(404).send("No user found.");
-                res.status(200).send(user);
+                res.status(200).send(toResponse(user));
             });
     });
 });
-
-// router.get('/me', verifyToken, async (req, res, next) => {
-//     console.log('request me received');
-//     try {
-//         const token = req.header('Authorization').replace('Bearer ', '')
-//         console.log('token: ' + token);
-//         const decoded = jwt.verify(token, authConfig.SECRET)
-//         console.log('decoded _id: ' + decoded._id)
-//         console.log('decoded: ' + decoded);
-//         const user = await User.findOne({
-//             _id: decoded._id
-//         })
-//         if (!user) {
-//             throw new Error()
-//         }
-//         req.token = token
-//         req.user = user
-//         next()
-//     } catch (e) {
-//         res.status(401).send({
-//             error: 'Please authenticate.'
-//         })
-//     }
-// });
 
 module.exports = router;

@@ -14,7 +14,9 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Password is mandatory']
+        required: [true, 'Password is mandatory'],
+        //hide this field in selects, if we want to collect it: Users.findOne({_id: id}).select('+password').exec(...);
+        select: false
     },
     email: {
         type: String,
@@ -36,6 +38,7 @@ function toResponse(document) {
         let response = document.toObject({ versionKey: false });
         response.id = response._id.toString();
         delete response._id;
+        delete response.password;
         return response;
     }
 }
