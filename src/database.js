@@ -32,13 +32,13 @@ async function init() {
 
     await new User({
         _id: new mongoose.Types.ObjectId("5fda3234e9e3fd53e3907bed"),
-        nick: "user1",
+        username: "user1",
         email: "user1@email.es"
     }).save();
 
     await new User({
         _id: new mongoose.Types.ObjectId("5fda3234e9e3fd53e3907bef"),
-        nick: "user2",
+        username: "user2",
         email: "user2@email.es"
     }).save();
 

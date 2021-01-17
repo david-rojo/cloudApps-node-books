@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
         return res.status(400).send(INVALID_BOOK_ID_RESPONSE);
     }
 
-    //If nick and name is placed in the comment, there is no need to populate.
+    //If username and name is placed in the comment, there is no need to populate.
     const book = await Book.findById(id).populate('comments.user');
     
     if (!book) {
@@ -56,8 +56,8 @@ router.post('/:id/comments', async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).send(INVALID_BOOK_ID_RESPONSE);
     }
-    if (!req.body.userNick) {
-        return res.status(400).send({ "error": "User nick is mandatory" });
+    if (!req.body.username) {
+        return res.status(400).send({ "error": "Username is mandatory" });
     }
 
     const book = await Book.findById(id);
@@ -65,9 +65,9 @@ router.post('/:id/comments', async (req, res) => {
         return res.status(404).send(BOOK_NOT_FOUND_RESPONSE);
     }
 
-    const user = await User.findOne({ nick: req.body.userNick })
+    const user = await User.findOne({ username: req.body.username })
     if (!user) {
-        return res.status(404).json({ "error": "User not found" });
+        return res.status(404).json({ "error": "Username not found" });
     };
 
     book.comments.push({

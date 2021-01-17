@@ -7,9 +7,9 @@ const isValidEmail = function(email) {
 }
 
 const userSchema = new mongoose.Schema({
-    nick: {
+    username: {
         type: String,
-        required: [true, 'Nick is mandatory'],
+        required: [true, 'Username is mandatory'],
         unique: true
     },
     email: {

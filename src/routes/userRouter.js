@@ -30,13 +30,13 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    const result = await User.find({ nick: req.body.nick }).exec();
+    const result = await User.find({ username: req.body.username }).exec();
     if (result.length > 0) {
-        return res.status(409).send({ "error": "Already exists a user with that nick" });
+        return res.status(409).send({ "error": "Already exists a user with that username" });
     }
 
     const user = new User({
-        nick: req.body.nick,
+        username: req.body.username,
         email: req.body.email
     });
 
