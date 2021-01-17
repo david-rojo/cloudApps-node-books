@@ -22,4 +22,36 @@ async function verify(req, res, next) {
   }
 }
 
-module.exports = verify;
+async function registeredUser(req, res, next) {
+
+    const authHeader = req.header('Authorization')
+    if (!authHeader) {
+      req.validUser = false
+    }
+    else {
+      const token = authHeader.replace('Bearer ', '')
+      if (!token) {
+        req.validUser = false
+      }
+      else {
+        const decoded = jwt.verify(token, authConfig.SECRET)
+        if (!decoded) {
+          req.validUser = false
+        }
+        else {
+          const user = await User.findById(decoded.id, {
+            password: 0
+          });
+          if (!user) {
+            req.validUser = false
+          }
+          else {
+            req.validUser = true
+          }
+        }
+      }
+    }
+    next()    
+}
+
+module.exports = {verify, registeredUser};

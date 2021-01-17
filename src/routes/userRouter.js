@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../auth/authConfig');
-const verify = require('../auth/verifyToken');
+const verifyToken = require('../auth/verifyToken');
 
 const INVALID_USER_ID_RESPONSE = {
     "error": "Invalid user id"
@@ -19,12 +19,12 @@ const USER_NOT_FOUND_RESPONSE = {
     "error": "User not found"
 };
 
-router.get('/', verify, async (req, res) => {
+router.get('/', verifyToken.verify, async (req, res) => {
     const allUsers = await User.find().exec();
     res.json(toResponse(allUsers));
 });
 
-router.get('/:id', verify, async (req, res) => {
+router.get('/:id', verifyToken.verify, async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).send(INVALID_USER_ID_RESPONSE);
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.patch('/:id', verify, async (req, res) => {
+router.patch('/:id', verifyToken.verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -95,7 +95,7 @@ router.patch('/:id', verify, async (req, res) => {
 
 });
 
-router.delete('/:id', verify, async (req, res) => {
+router.delete('/:id', verifyToken.verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -125,7 +125,7 @@ router.delete('/:id', verify, async (req, res) => {
     res.json(toResponse(user));
 });
 
-router.get('/:id/comments', verify, async (req, res) => {
+router.get('/:id/comments', verifyToken.verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
