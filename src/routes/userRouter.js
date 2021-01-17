@@ -8,9 +8,9 @@ const {
 const Book = require('../models/book.js').Book;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const verifyToken = require('../auth/verifyToken');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../auth/authConfig');
+const verify = require('../auth/verifyToken');
 
 const INVALID_USER_ID_RESPONSE = {
     "error": "Invalid user id"
@@ -18,26 +18,6 @@ const INVALID_USER_ID_RESPONSE = {
 const USER_NOT_FOUND_RESPONSE = {
     "error": "User not found"
 };
-
-const verify = async (req, res, next) => {
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, authConfig.SECRET)
-        const user = await User.findById(decoded.id, {
-            password: 0
-        });
-        if (!user) {
-            throw new Error()
-        }
-        req.token = token
-        req.user = user
-        next()
-    } catch (e) {
-        res.status(401).send({
-            error: 'Please authenticate.'
-        })
-    }
-}
 
 router.get('/', verify, async (req, res) => {
     const allUsers = await User.find().exec();

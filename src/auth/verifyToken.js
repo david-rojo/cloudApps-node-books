@@ -1,19 +1,25 @@
-var jwt = require('jsonwebtoken');
-var authConfig = require('./authConfig');
+const jwt = require('jsonwebtoken');
+const authConfig = require('./authConfig');
+const User = require('../models/user.js').User;
 
-function verifyToken(req, res, next) {
-  var token = req.headers['x-access-token'];
-  if (!token)
-    return res.status(403).send({ auth: false, message: 'No token provided.' });
-    
-  jwt.verify(token, authConfig.SECRET, function(err, decoded) {
-    if (err)
-    return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-      
-    // if everything good, save to request for use in other routes
-    req.userId = decoded.id;
-    next();
-  });
+async function verify(req, res, next) {
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '')
+    const decoded = jwt.verify(token, authConfig.SECRET)
+    const user = await User.findById(decoded.id, {
+      password: 0
+    });
+    if (!user) {
+      throw new Error()
+    }
+    req.token = token
+    req.user = user
+    next()
+  } catch (e) {
+    res.status(401).send({
+      error: 'Please authenticate.'
+    })
+  }
 }
 
-module.exports = verifyToken;
+module.exports = verify;

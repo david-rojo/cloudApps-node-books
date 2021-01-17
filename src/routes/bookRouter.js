@@ -4,16 +4,19 @@ const { Book, toResponse: toResponseBook } = require('../models/book.js');
 const User = require('../models/user.js').User;
 const toResponseComment = require('../models/comment.js').toResponse;
 const mongoose = require('mongoose');
+const verify = require('../auth/verifyToken');
 
 const INVALID_BOOK_ID_RESPONSE = { "error": "Invalid book id" };
 const BOOK_NOT_FOUND_RESPONSE = { "error": "Book not found" }
 
 router.get('/', async (req, res) => {
+    //if validToken --> book with details
+    //else at it is
     const allBooks = await Book.find().exec();
     res.json(toResponseBook(allBooks));
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -30,7 +33,7 @@ router.get('/:id', async (req, res) => {
     res.json(toResponseBook(book));
 });
 
-router.post('/', async (req, res) => {
+router.post('/', verify, async (req, res) => {
 
     const book = new Book({
         title: req.body.title,
@@ -50,7 +53,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.post('/:id/comments', async (req, res) => {
+router.post('/:id/comments', verify, async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -90,7 +93,7 @@ router.post('/:id/comments', async (req, res) => {
 });
 
 
-router.delete('/:id/comments/:commentId', async (req, res) => {
+router.delete('/:id/comments/:commentId', verify, async (req, res) => {
     const id = req.params.id;
     const commentId = req.params.commentId;
 
@@ -115,6 +118,24 @@ router.delete('/:id/comments/:commentId', async (req, res) => {
     await book.save();
     res.json(toResponseComment(comment));
 
+});
+
+router.delete('/:id', verify, async (req, res) => {
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send(INVALID_BOOK_ID_RESPONSE);
+    }
+
+    //If username and name is placed in the comment, there is no need to populate.
+    const book = await Book.findById(id).populate('comments.user');
+    
+    if (!book) {
+        return res.status(404).send(BOOK_NOT_FOUND_RESPONSE);
+    }
+
+    await Book.findByIdAndDelete(id);
+    res.json(toResponseBook(book));
 });
 
 module.exports = router;
