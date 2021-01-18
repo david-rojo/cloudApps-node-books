@@ -32,12 +32,46 @@ $ npm install
 $ node src/server.js
 ```
 
-When the application is deployed some data is loaded, in order to check database content is recommended to user some mongo client like [Compass](https://www.mongodb.com/products/compass)
+When the application is deployed the following data is loaded (in order to check database content is recommended to user some mongo client like [Compass](https://www.mongodb.com/products/compass)) in collections of ```booksDB``` database:
+
+### books
+
+![MONGODB BOOKS](doc/img/mongodb-books.png)
+
+### users
+
+![MONGODB BOOKS](doc/img/mongodb-users.png)
 
 ## Testing
 
 A [Postman](https://www.postman.com/) collection is provided in the current repository [Practice4-security-node.postman_collection.json](Practice4-security-node.postman_collection.json) to easily play and test the application.
 
+It contains all needed data to test each endpoint immediately but you have to set value of these environment variables (Edit the collection and set them in Variables tab):
+
+| NAME     | VALUE                                                    |
+|----------|----------------------------------------------------------|
+| baseUrl  | https://localhost:3443                                   |
+| jwtToken | execute Login request in auth folder to retrieve a token |
+
+The ```jwtToken``` value has been used in **Authorization** header, that you can find in Headers tab of Postman
+
+The collection contains three main folders:
+
+### anonymous
+
+Exposes the operations that the not registered users can execute: create a user and get the books of the system with some information.
+
+![POSTMAN ANONYMOUS](doc/img/postman-anonymous.jpg)
+
+### auth
+
+Exposes the login endpoint needed to get a JWT in order to  be able to execute the requests of **api/v1** folder and also the Who am I request that query the ```/api/v1/users/auth/me``` endpoint that receives a token in headers and returns the data of the user in the token.
+
+![POSTMAN AUTH](doc/img/postman-auth.jpg)
+
+### api/v1
+
+![POSTMAN API](doc/img/postman-users-books.jpg)
 
 ## Author
 
