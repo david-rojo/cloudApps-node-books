@@ -45,7 +45,7 @@ Both users has the same password: ```password``` but appears encoded, as it is s
 
 ![MONGODB BOOKS](doc/img/mongodb-users.png)
 
-**If you have the application running and you stop and start it, all existing data in database are overwriiten by previously described data**, providing in each application start a clean environmment.
+**If you have the application running and you stop and start it, all existing data in database are overwritten by previously described data**, providing in each application start a clean environmment.
 
 ## Testing
 
