@@ -41,7 +41,11 @@ When the application is deployed the following data is loaded (in order to check
 
 ### users
 
+Both users has the same password: ```password``` but appears encoded, as it is stored in this way in order for security purpose.
+
 ![MONGODB BOOKS](doc/img/mongodb-users.png)
+
+**If you have the application running and you stop and start it, all existing data in database are overwriiten by previously described data**, providing in each application start a clean environmment.
 
 ## Testing
 
