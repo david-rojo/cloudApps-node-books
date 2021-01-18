@@ -1238,12 +1238,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/books/",
-									"protocol": "http",
+									"raw": "{{baseUrl}}/api/v1/books/",
 									"host": [
-										"localhost"
+										"{{baseUrl}}"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
