@@ -17,6 +17,7 @@ If you wish to launch the containers in background, include ```-d```
 The running database has these connection details:
 
   * port: ```27017```
+  * database: ```booksDB```
 
 ## Installation
 
